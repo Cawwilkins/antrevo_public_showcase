@@ -40,13 +40,13 @@ export default function Login() {
         </div>
       </nav>
 
-      <div className="flex">
-        <div id="sign-in" className="flex flex-col text-left font-['Inter']">
-          <div className="flex pl-[6vw] pt-[12vw] font-bold text-green-400 text-5xl">Welcome Back!</div>
-          <div className="flex pt-[1vw] pl-[8vw] text-zinc-500 font-semibold text-4xl italic">Stay on top of your stocks - effortlessly.</div>
+      <div className="flex flex-col md:flex-row">
+        <div id="sign-in" className="flex flex-col justify-center items-center md:text-left md:justify-start md:items-start font-['Inter']">
+          <div className="flex md:pl-[6vw] pt-[12vw] justify-center items-center md:text-left font-bold text-green-400 text-5xl">Welcome Back!</div>
+          <div className="flex md:pl-[8vw] pt-[1vw] justify-center items-center text-zinc-500 font-semibold text-4xl italic">Stay on top of your stocks - effortlessly.</div>
         </div>
 
-        <div id="create-account-form" className="flex flex-col pl-[10vw] text-left font-['Inter']">
+        <div id="create-account-form" className="flex w-[90%] md:w-auto flex-col md:pl-[10vw] text-left font-['Inter']">
           <div className="flex pl-[6vw] pt-[8vw] font-bold text-gray-200 text-5xl"> Sign In </div>
 
           <form onSubmit={signIn} className="flex flex-col pl-[6vw] pt-[2vw]">

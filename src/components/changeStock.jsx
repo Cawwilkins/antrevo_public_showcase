@@ -42,32 +42,32 @@ export default function ChangeStockModal({
     return (
         <dialog
         ref={dialogRef}
-        className="open:flex open:flex-col open:justify-center open:items-center fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-90 border-green-400 rounded-2xl w-[70vw] h-[70vh] bg-zinc-900 border-[3px] font-['Inter']">
+        className="open:flex open:flex-col open:justify-center open:items-center fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-90 border-green-400 rounded-2xl w-[60vw] py-[5vw] md:h-[70vh] bg-zinc-900 border-[3px] font-['Inter']">
             <form onSubmit={handleConfirm}>
-            <div className="pt-[2vw] items-center justify-center text-gray-200 text-5xl font-normal font-['Inter']">Change Active<span className="text-green-400"> Stock</span></div>
-            <div className="flex pt-[2vw]">
+            <div className="pt-[2vw] flex items-center justify-center text-gray-200 text-2xl md:text-5xl font-normal font-['Inter']">Change Active<span className="text-green-400">&nbsp;Stock</span></div>
+            <div className="flex pt-[2vw] justify-center">
                 <label>
-                <div className="items-center text-gray-200 text-2xl font-normal font-['Inter'] pt-[0.5vw] pr-[0.5vw]">Ticker Symbol:</div>
+                <div className="items-center text-gray-200 md:text-2xl font-normal font-['Inter'] pb-[0.5vw] pr-[0.5vw]">Ticker Symbol:</div>
                 <input
                     ref={inputRef}
                     type="text"
                     value={symbol}
                     onChange={(e) => setSymbol(e.target.value)}
-                    className="items-center bg-zinc-900 pl-[1vw] border-[3px] border-green-400 text-gray-200 text-xl font-normal font-['Inter'] rounded-2xl border-[3px] py-2"
+                    className="items-center bg-zinc-900 pl-[1vw] border-[3px] border-green-400 text-gray-200 md:text-xl font-normal font-['Inter'] rounded-2xl border-[3px] py-2"
                     placeholder="e.g. AAPL, TSLA, GOOGL"
                 />
                 </label>
             </div>
-            <div className="flex pt-[2vw] justify-between gap-[2vw]">
+            <div className="flex pt-[3vw] md:pt-[2vw] justify-center md:justify-between gap-[4vw] md:gap-[2vw]">
                     <button 
                     type="submit"
-                    className="text-gray-200 text-2xl border-[3px] pr-[6vw] pt-[2vw] pl-[6vw] pb-[2vw] rounded-2xl border-green-400 font-bold hover:bg-green-400 hover:text-zinc-900 transition-colors duration-200">
+                    className="flex-1 text-gray-200 md:text-2xl border-[3px]  pt-[2vw] pb-[2vw] rounded-2xl border-green-400 font-bold hover:bg-green-400 hover:text-zinc-900 transition-colors duration-200">
                         Confirm
                     </button>
                     <button 
                     type="button"
                     onClick={() => dialogRef.current?.close()}
-                    className="text-gray-200 text-2xl border-[3px] pr-[6vw] pt-[2vw] pl-[6vw] pb-[2vw] rounded-2xl border-green-400 font-bold hover:bg-green-400 hover:text-zinc-900 transition-colors duration-200">
+                    className="flex-1 text-gray-200 md:text-2xl border-[3px] pt-[2vw] pb-[2vw] rounded-2xl border-green-400 font-bold hover:bg-green-400 hover:text-zinc-900 transition-colors duration-200">
                         Back
                     </button>
                 </div>

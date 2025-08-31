@@ -1,13 +1,160 @@
 import arrow from '../assets/Hi-Res.png';
-import stockPage from '../assets/Stock Page.png';
-import stratPage from '../assets/Strategy Page.png';
-import simTrade from '../assets/Simulate Trade.png';
-import memberPage from '../assets/Membership Page 1.png';
-import changeStock from '../assets/Change Stock.png';
-import createAcc from '../assets/Create Account 1.png';
+import mainPage from '../assets/Main_page.png';
+import algPage from '../assets/Alg_page.png';
+import simTrade from '../assets/Sim_Trade.png';
+import changeStock from '../assets/Change_Stock.png';
+import sellAlert from '../assets/Sell_Alert.png';
+import changeAlg from '../assets/Change_Alg.png'
 import { Link } from 'react-router-dom';
+import UpdateModal from '../components/updates';
+import { useState } from 'react';
+const API_BASE = import.meta.env?.VITE_API_URL || "http://localhost:8000";
+
+const WaitlistForm = () => {
+    const [email, setEmail] = useState("");
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        const formE1 = e.currentTarget;
+        const formData = new FormData(formE1);
+        const honey = formData.get('honeypot');
+
+        if (honey) return; // honeypot filled in, do not submit
+
+        console.log("Submitting email:", email);
+
+        try {
+            console.log("Sending request to waitlist API...");
+            const res = await fetch(`${API_BASE}/api/waitlist`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email }),
+            });
+            console.log("Response received from waitlist API.");
+            // Add these two lines to see exactly what's coming back
+            const debugBody = await res.clone().text(); // clone() lets us read without consuming it
+            console.log('Waitlist API → status:', res.status, 'body:', debugBody);
+            const payload = await res.json().catch(() => ({}));
+
+            if (res.ok) {
+                alert("You're on the waitlist!");
+                setEmail('');
+                formE1.reset();
+            } else if (res.status === 409) {
+                alert("You are already on the waitlist.");
+                setEmail('');
+                formE1.reset();
+            } else if (res.status === 400) {
+                alert(payload.error || "Invalid email");
+            } else {
+                console.error('Unexpected: ', res.status, payload);
+                alert("Something went wrong, please try again later.");
+            }
+        } catch (err) {
+            console.error("Error during fetch:", err);
+            alert("Network error. Check console.");
+        }
+    };
+
+    return (
+        <form onSubmit={handleSubmit} className="flex justify-center pt-[1vw] gap-[0.5vw]">
+            <label htmlFor="email" className="sr-only">Email Address</label>
+            <input
+                type="email"
+                placeholder="Email"
+                id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="bg-zinc-900 pl-4 rounded-2xl text-zinc-300 border-[3px] pt-1 pb-1 pr-[5vw] border-green-400 font-['Inter']"
+            />
+
+            {/* Honeypot */}
+            <input type="text" name="honeypot" tabIndex="-1" autoComplete="off" style={{ display: 'none' }} />
+
+            <button
+                type="submit"
+                className="bg-green-400 pt-2 pl-4 pr-4 pb-2 rounded-2xl justify-center text-zinc-900 border-transparent
+                border-3 hover:bg-zinc-900 hover:text-green-400 hover:border-green-400 hover:border-3 text-2xl font-bold font-['Inter'] transition-colors duration-200 z-[1]"
+            >
+                Join
+            </button>
+        </form>
+    );
+};
+
+const DemoForm = () => {
+    const [email, setEmail] = useState("");
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        const formE1 = e.currentTarget;
+        const formData = new FormData(formE1);
+        const honey = formData.get('honeypot');
+
+        if (honey) return; // honeypot filled in, do not submit
+
+        console.log("Submitting email:", email);
+
+        try {
+            console.log("Sending request to demo API...");
+            const res = await fetch(`${API_BASE}/api/demo`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email }),
+            });
+            console.log("Response received from demo API.");
+            // Add these two lines to see exactly what's coming back
+            const debugBody = await res.clone().text(); // clone() lets us read without consuming it
+            console.log('Demo API → status:', res.status, 'body:', debugBody);
+            const payload = await res.json().catch(() => ({}));
+
+            if (res.ok) {
+                alert("Please check your email to confirm demo details.");
+                setEmail('');
+                formE1.reset();
+            } else if (res.status === 400) {
+                alert(payload.error || "Invalid email");
+            } else {
+                console.error('Unexpected: ', res.status, payload);
+                alert("Something went wrong, please try again later.");
+            }
+        } catch (err) {
+            console.error("Error during fetch:", err);
+            alert("Network error. Check console.");
+        }
+    };
+
+    return (
+        <form onSubmit={handleSubmit} className="flex justify-center pt-[1vw] gap-[0.5vw]">
+            <label htmlFor="email" className="sr-only">Email Address</label>
+            <input
+                type="email"
+                placeholder="Email"
+                id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="bg-zinc-900 pl-4 rounded-2xl text-zinc-300 border-[3px] pt-1 pb-1 pr-[5vw] border-green-400 font-['Inter']"
+            />
+
+            {/* Honeypot */}
+            <input type="text" name="honeypot" tabIndex="-1" autoComplete="off" style={{ display: 'none' }} />
+
+            <button
+                type="submit"
+                className="bg-green-400 pt-2 pl-4 pr-4 pb-2 rounded-2xl justify-center text-zinc-900 border-transparent
+                border-3 hover:bg-zinc-900 hover:text-green-400 hover:border-green-400 hover:border-3 text-2xl font-bold font-['Inter'] transition-colors duration-200 z-[1]"
+            >
+                Request
+            </button>
+        </form>
+    );
+};
 
 const LandingPage = () => {
+    const [showUpdateModal, setShowUpdateModal] = useState(true);
+    
     return (
         <main className="relative w-full min-h-screen overflow-x-hidden bg-[#1a1a1a]">
             <img src={arrow} alt="" aria-hidden="true" className="absolute mt-[10vh] rotate-[-17deg] md:rotate-[0deg] right-[-10vw] max-w-[125%] md:right-[0vw] md:mt-[0vh] md:max-w-[100%] md:absolute md:w-[200%] opacity-[70%] z-[0] -mt-[15vh] pointer-events-none" />
@@ -17,10 +164,10 @@ const LandingPage = () => {
                     <div className="w-auto h-auto justify-left"><span className="text-white text-4xl font-normal font-['Inter'] z-[1]">Antr</span>
                     <span className="italic text-green-400 text-4xl font-semibold font-['Inter'] z-[1]">Evo</span></div>
                     <div className="flex gap-[2vw]">
-                        <Link to="/sign-in"><button className="text-zinc-300 text-1xl font-normal font-['Inter'] hover:text-green-400 z-[10]">LOG IN</button></Link>
+                        <Link to="/sign-in"><button className="mr-[2vw] md:mr-[0vw] text-zinc-300 text-1xl font-normal font-['Inter'] hover:text-green-400 z-[10]">LOG IN</button></Link>
                     </div>
                 </nav>
-
+                {showUpdateModal && <UpdateModal onAccept={() => setShowUpdateModal(false)} />}
                 {/* Hero section */}
                 <section id="hero" className="flex flex-col pt-[15vw] text-center md:text-left md:pl-[8vw] space-y-[.5vw]">
                     <div className="w-auto h-auto z-[1]">
@@ -35,12 +182,13 @@ const LandingPage = () => {
                     <div className="w-auto h-auto text-gray-200 text-1xl md:text-2xl font-medium font-['Inter'] pr-[2vw] pl-[2vw] md:pl-[1vw] md:pr-[10vw] xl:pr-[35vw] z-[1]">
                         AntrEvo provides alerts based on preset algorithms to help inform your trading decisions.
                     </div>
-                    <div className="pl-[1vw] pt-[1vw] z-[10]">
-                        <a href='#waitlist'>
-                            <Link to="/sign-in"><button className="self-start pl-[1vw] pr-[1vw] pt-[0.5vw] pb-[0.5vw] z-[10] bg-green-400 border-transparent border-3 hover:bg-zinc-900 hover:text-green-400 rounded-[55px] hover:border-green-400 hover:border-3 text-zinc-900 font-bold font-['Inter'] transition-colors duration-200 z-[1]">
-                                Get Started Today
-                            </button></Link>
-                        </a>
+                    <div className="flex justify-center md:justify-start gap-[2vw] md:gap-[1vw] pl-[1vw] pt-[1vw] z-[10]">
+                        <a href="#waitlist"><button className="self-start pl-[1vw] pr-[1vw] pt-[0.5vw] pb-[0.5vw] z-[10] bg-green-400 border-transparent border-3 hover:bg-zinc-900 hover:text-green-400 rounded-[55px] hover:border-green-400 hover:border-3 text-zinc-900 font-bold font-['Inter'] transition-colors duration-200 z-[1]">
+                            Join the Waitlist
+                        </button></a>
+                        <a href="#waitlist"><button className="self-start pl-[1vw] pr-[1vw] pt-[0.5vw] pb-[0.5vw] z-[10] bg-green-400 border-transparent border-3 hover:bg-zinc-900 hover:text-green-400 rounded-[55px] hover:border-green-400 hover:border-3 text-zinc-900 font-bold font-['Inter'] transition-colors duration-200 z-[1]">
+                            Request a Demo
+                        </button></a>
                     </div>
                 </section>
                 
@@ -85,29 +233,29 @@ const LandingPage = () => {
                 <h2 className="text-gray-200 md:text-left text-3xl md:text-5xl font-bold font-['Inter'] z-[1] md:pl-[8vw]">Preview</h2>
                     <div className="flex flex-col">
                         <div className="flex flex-col items-center justify-between py-[2vh] md:py-[4vh] lg:flex-row justify-between px-[4vw] max-w-full overflow-hidden">
-                            <div className="w-[100%] lg:w-[30%] rounded-2xl overflow-hidden">
-                                <img className="w-full h-auto object-cover" src={stockPage} alt="Monitoring stock dashboard showing live signal status where you can change stock, simulate trade, view back test win percentage, view last alerts, and current strategy." />
+                            <div className="w-[100%] lg:w-[30%] rounded-2xl overflow-hidden border-[3px] border-green-400">
+                                <img className="w-full h-auto object-cover" src={mainPage} alt="Monitoring stock dashboard showing live signal status where you can change stock, simulate trade, view back test win percentage, view last alerts, and current strategy." />
                             </div>
-                            <div className="w-[100%] lg:w-[30%] rounded-2xl overflow-hidden">
-                                <img className="w-full h-auto object-cover pt-[4vw] lg:pt-[0vw]" src={stratPage} alt="Choose a preset trading algorithm with an explanation of strategy, concept, and strengths." />
+                            <div className="w-[100%] lg:w-[30%] rounded-2xl mt-[5vw] mb-[5vw] md:mt-[0vw] md:mb-[0vw] overflow-hidden border-[3px] border-zinc-300">
+                                <img className="w-full h-auto object-cover pt-[4vw] lg:pt-[0vw]" src={algPage} alt="Choose a preset trading algorithm with an explanation of strategy, concept, and strengths." />
                             </div>
-                            <div className="w-[100%] lg:w-[30%] rounded-2xl overflow-hidden">
+                            <div className="w-[100%] lg:w-[30%] rounded-2xl overflow-hidden border-[3px] border-green-400">
                                 <img className="w-full h-auto object-cover pt-[4vw] lg:pt-[0vw]" src={simTrade} alt="Simulate a trade to preview how a stock would have performed with a selected strategy." />
                             </div>
                         </div>
                         <div className="hidden lg:flex flex-row justify-between px-[4vw] max-w-full overflow-hidden">
-                            <div className="w-[30%] rounded-2xl overflow-hidden">
-                                <img className="w-full h-auto object-cover" src={memberPage} alt="Membership status with renewal date, cancellation FAQs, and cancel option." />
+                            <div className="w-[30%] rounded-2xl overflow-hidden border-[3px] border-zinc-300">
+                                <img className="w-full h-auto object-cover" src={changeAlg} alt="Membership status with renewal date, cancellation FAQs, and cancel option." />
                             </div>
-                            <div className="w-[30%] rounded-2xl overflow-hidden">
+                            <div className="w-[30%] rounded-2xl overflow-hidden border-[3px] border-green-400">
                                 <img className="w-full h-auto object-cover" src={changeStock} alt="Change monitored stock by entering a ticker symbol." />
                             </div>
-                            <div className="w-[30%] rounded-2xl overflow-hidden">
-                                <img className="w-full h-auto object-cover" src={createAcc} alt="Create an account with email, password, phone number, terms of service and SMS consent." />
+                            <div className="w-[30%] rounded-2xl overflow-hidden border-[3px] border-zinc-300">
+                                <img className="w-full h-auto object-cover" src={sellAlert} alt="Create an account with email, password, phone number, terms of service and SMS consent." />
                             </div>
                         </div>
                         <div className="text-center text-zinc-300 text-1xl font-normal font-['Inter'] pt-[0.5vw]">
-                            <p>Images subject to change. Figures shown are placeholders for demonstration purposes only and do not reflect actual or backtested trading results.</p>
+                            <p>Images subject to change. Results may include simulated/backtested performance; actual outcomes can differ. Past performance is not indicative of future results.</p>
                         </div>
                     </div>
                 </section>
@@ -116,7 +264,7 @@ const LandingPage = () => {
             <section id="about" className="flex xl:flex-row flex-col pt-[20vw]">
                 <div className="flex flex-col justify-center lg:justify-start md:pl-[4vw] md:pr-[4vw] pl-[2vw] pr-[2vw]">
                     <h2 className="text-3xl md:text-5xl text-gray-200 text-center xl:text-left font-bold font-['Inter'] z-[1]">About </h2>
-                    <div className="text-zinc-300 text-2xl font-normal font-['Inter'] text-left pt-[0.5vw]">
+                    <div className="text-center md:text-left text-zinc-300 text-2xl font-normal font-['Inter'] pt-[0.5vw]">
                         &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; My mission is to make trading more simple, efficient, and easy for everyone. 
                         Currently, I'm a solo-dev balancing work and school but I've always had an interest in finance. 
                         I developed this tool because I  wanted to invest in the stock market and get better at day trading 
@@ -144,19 +292,25 @@ const LandingPage = () => {
                 </div>
             </section>
 
-            {/* End of Page */}
-            <section id="waitlist" className="flex flex-col pt-[30vw] md:pt-[20vw]">
-                <h2 className="text-gray-200 text-5xl font-bold font-['Inter'] z-[1]">Join Today</h2>
-                <div className="text-zinc-300 pt-[0.5vw] text-2xl font-normal font-['Inter'] pl-[2vw] pr-[2vw] md:pl-[0vw] md:pr-[0vw]">
-                    <span className="hidden md:block"> Start receiving real-time alerts for stocks you care about!
-                    </span>
-                    <div className="pt-[1vw] z-[10]">
-                        <a href='#nav'>
-                            <button className="pl-[1vw] pr-[1vw] pt-[0.5vw] pb-[0.5vw] z-[10] bg-green-400 border-transparent border-3 hover:bg-zinc-900 hover:text-green-400 rounded-[55px] hover:border-green-400 hover:border-3 text-zinc-900 font-bold font-['Inter'] transition-colors duration-200 z-[1]">
-                                Get Started Today
-                            </button>
-                        </a>
+            {/* Waitlist Form */}
+            <section id="waitlist" className="flex flex-col gap-y-[10vw] md:gap-y-[0vw] md:grid md:grid-cols-2 items-center pt-[30vw] md:pt-[20vw]">
+                <div className="flex flex-col">
+                    <h2 className="flex justify-center items-center text-gray-200 text-5xl font-bold font-['Inter'] z-[1]">Join the Waitlist</h2>
+                    <div className="flex justify-center items-center text-zinc-300 text-2xl font-normal font-['Inter']">
+                        <span className="hidden md:block"> Provide your email to receive updates and a free promo code!
+                            <br></br>(Offer Subject to Change.) </span>
+                        <span className="block md:hidden"> Provide your email to receive updates and a free promo code! <br></br> (Offer Subject to Change.)
+                        </span>
                     </div>
+                    <WaitlistForm />
+                </div>
+                <div className="flex flex-col">
+                    <h2 className="flex justify-center items-center text-gray-200 text-5xl font-bold font-['Inter'] z-[1]">Request Demo</h2>
+                    <div className="flex justify-center items-center text-zinc-300 text-2xl font-normal font-['Inter']">
+                        <span className="hidden md:block"> Provide your email to schedule a demonstration
+                        </span>
+                    </div>
+                    <DemoForm />
                 </div>
             </section>
 

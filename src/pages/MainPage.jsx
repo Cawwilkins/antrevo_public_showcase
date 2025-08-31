@@ -171,7 +171,7 @@ const MainPage = () => {
             <nav id="nav" className="flex px-[3vw] justify-between items-center py-4">
                 <div className="w-auto h-auto justify-left"><span className="text-white text-4xl font-normal font-['Inter'] z-[1]">Antr</span>
                     <span className="italic text-green-400 text-4xl font-semibold font-['Inter'] z-[1]">Evo</span></div>
-                        <div className="flex gap-[1.5vw]">
+                        <div className="flex gap-[3vw] md:gap-[1.5vw]">
                             <button className="text-1xl font-normal font-['Inter'] text-green-400 z-[10]">STOCK</button>
                             <Link to="/strategy-page"><button className="text-zinc-300 text-1xl font-normal font-['Inter'] hover:text-green-400 z-[10]">STRATEGY</button></Link>
                         </div>
@@ -216,21 +216,21 @@ const MainPage = () => {
             )}
 
 
-            <div className="flex pl-[7vw] pt-[4vh] pr-[7vw]">
-                <div className="relative overflow-hidden text-left w-[60vw] pl-[2vw] z-[1] pt-[2vw] max-w-[50vw] max-h-[80vh] border-[3px] rounded-2xl border-gray-200 bg-zinc-900">
+            <div className="flex flex-col md:flex-row pl-[7vw] pt-[4vh] pr-[7vw]">
+                <div className="relative overflow-hidden text-left min-h-[50vh] md:w-[60vw] pl-[2vw] z-[1] pt-[2vw] md:max-w-[50vw] lg:h-[80vh] md:max-h-[80vh] border-[3px] rounded-2xl border-gray-200 bg-zinc-900">
                     {chartSrc ? (
                     <img src={chartSrc} alt="Stock Chart" className="absolute inset-0 w-full h-full object-cover object-right opacity-70 pointer-events-none z-0" />
                 ) : null}
                     <div className="absolute z-10 rounded-2xl pl-[5px] pt-[5px] pb-[5px] pr-[5px]">
                         <div className="font-bold text-gray-200 text-2xl">{engine?.stock || "No Stock Selected"}</div>
-                        <div className="pt-[0.5vw] text-gray-200 font-semi-bold text-1xl pl-[1vw]">Current Market Value: <span className="text-green-400">{lastPrice.toFixed(5)}</span></div>
+                        <div className="pt-[0.5vw] text-gray-200 font-semi-bold text-1xl pl-[1vw]">Current Market Value: <span className="text-green-400">${lastPrice.toFixed(2)}</span></div>
                         <div className="pt-[0.5vw] text-gray-200 font-semi-bold text-1xl pl-[1vw]">Simulated Shares: <span className="text-green-400">{engine?.purchased_share ?? 0}</span></div>
                         <div className="pt-[0.5vw] text-gray-200 font-semi-bold text-1xl pl-[1vw]">Simulated Profit/Loss: <span className="text-green-400">${pl.toFixed(2)}</span></div>
                     </div>
                 </div>
-                <div className="flex flex-col text-left">
-                <div className="flex flex-col ml-[2vw] pt-[2vw] space-y-[2vw]">
-                    <div className="flex gap-[1vw]">
+                <div className="flex flex-col text-left justify-center">
+                <div className="flex md:flex-col items-center justify-center lg:justify-start gap-3 md:gap-[2vw] md:ml-[2vw] pt-[4vw] md:pt-[0vw]">
+                    <div className="hidden flex gap-[1vw]">
                     <button 
                         onClick={pause}
                         className="text-gray-200 text-2xl border-[3px] pr-[6vw] pt-[2vw] pl-[6vw] pb-[2vw] rounded-2xl border-green-400 font-bold hover:bg-green-400 hover:text-zinc-900 transition-colors duration-200">
@@ -244,12 +244,12 @@ const MainPage = () => {
                     </div>
                     <button 
                         onClick={() => setShowModal(true)}
-                        className="text-gray-200 text-2xl border-[3px] pr-[6vw] pt-[2vw] pl-[6vw] pb-[2vw] rounded-2xl border-green-400 font-bold hover:bg-green-400 hover:text-zinc-900 transition-colors duration-200">
+                        className="w-full inline-flex text-center items-center justify-center text-gray-200 text-2xl border-[3px] pt-[2vw] pb-[2vw] rounded-2xl border-green-400 font-bold hover:bg-green-400 hover:text-zinc-900 transition-colors duration-200">
                         Change Stock
                     </button>
                     <button 
                         onClick={() => setShowSim(true)}
-                        className="py-[2vw] text-gray-200 text-2xl border-[3px] pr-[6vw] pt-[2vw] pl-[6vw] pb-[2vw] rounded-2xl border-green-400 font-bold hover:bg-green-400 hover:text-zinc-900 transition-colors duration-200">
+                        className="w-full inline-flex text-center items-center justify-center text-gray-200 text-2xl border-[3px] pt-[2vw] pb-[2vw] rounded-2xl border-green-400 font-bold hover:bg-green-400 hover:text-zinc-900 transition-colors duration-200">
                         Simulate Trade
                     </button>
                     {showModal && (
@@ -260,14 +260,14 @@ const MainPage = () => {
                     )}
                     
                 </div>
-                <div className="flex flex-col ml-[2vw] pt-[2vw]">
-                    <p className="pt-[1vw] text-gray-200 text-2xl font-bold font-['Inter']">Backtest Win Percentage:
+                <div className="flex flex-col md:ml-[2vw] items-center md:items-start pt-[2vw]">
+                    <p className="pt-[1vw] text-gray-200 md:text-2xl font-bold font-['Inter']">Backtest Win Percentage:
                         <span className="text-green-400 italic"> {winPct}% ({improvedSignals}/{buySignals})</span>
                     </p>
-                    <p className="pt-[1vw] text-gray-200 text-2xl font-bold font-['Inter']">Last Alert:
+                    <p className="pt-[1vw] text-gray-200 md:text-2xl font-bold font-['Inter']">Last Alert:
                         <span className="text-green-400 italic"> {formatEST(engine?.last_buy_alert) || "No alert available"}</span>
                     </p>
-                    <p className="pt-[1vw] text-gray-200 text-2xl font-bold font-['Inter']"> Current Strategy:
+                    <p className="pt-[1vw] text-gray-200 md:text-2xl font-bold font-['Inter']"> Current Strategy:
                         <span className="text-green-400 italic"> {engine?.algo || "No strategy available"}</span>
                     </p>
 
